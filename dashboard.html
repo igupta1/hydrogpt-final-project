@@ -49,11 +49,12 @@
     }
 
     .header {
-      background-color: var(--card-background);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, var(--card-background), rgba(47, 47, 47, 0.7));
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(16, 163, 127, 0.1);
       padding: 20px 0;
       margin-bottom: 40px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 2px solid rgba(16, 163, 127, 0.2);
+      backdrop-filter: blur(10px);
     }
 
     .header-content {
@@ -71,6 +72,14 @@
       font-size: 24px;
       font-weight: 600;
       gap: 12px;
+    }
+    .header-logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: transparent;
     }
     
     .logo-placeholder {
@@ -118,12 +127,25 @@
     }
     
     .content-section {
-      background-color: var(--card-background);
-      border-radius: 12px;
+      background: linear-gradient(135deg, var(--card-background) 0%, rgba(47, 47, 47, 0.5) 100%);
+      border-radius: 16px;
       padding: 32px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      border: 1px solid var(--border-color);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(16, 163, 127, 0.08);
+      border: 1px solid rgba(16, 163, 127, 0.2);
       display: none;
+      backdrop-filter: blur(10px);
+    }
+    
+    .content-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(16, 163, 127, 0.05), transparent);
+      pointer-events: none;
+      border-radius: 16px;
     }
     
     .content-section.active {
@@ -139,12 +161,33 @@
     
     .stat-box {
       padding: 24px;
-      border-radius: 8px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       gap: 16px;
-      background-color: var(--stat-box-background);
-      border: 1px solid var(--border-color);
+      background: linear-gradient(135deg, var(--stat-box-background) 0%, rgba(47, 47, 47, 0.8) 100%);
+      border: 1px solid rgba(16, 163, 127, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(16, 163, 127, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-box:hover {
+      box-shadow: 0 12px 48px rgba(16, 163, 127, 0.2), inset 0 1px 1px rgba(16, 163, 127, 0.15);
+      border-color: rgba(16, 163, 127, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(16, 163, 127, 0.05), transparent);
+      pointer-events: none;
     }
     
     .stat-data {
@@ -154,7 +197,44 @@
     .stat-box .emoji {
       font-size: 36px;
     }
-    
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        filter: drop-shadow(0 0 0px rgba(16, 163, 127, 0));
+      }
+      50% {
+        filter: drop-shadow(0 0 8px rgba(16, 163, 127, 0.6));
+      }
+    }
+
+    .stat-box {
+      animation: slideInUp 0.6s ease-out;
+    }
+
+    .stat-box .stat-icon {
+      font-size: 36px;
+      animation: float 3s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .stat-box .stat-icon.message-icon {
+      animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+    }
+
+    .stat-box .stat-icon.energy-icon {
+      animation: float 3.5s ease-in-out infinite, glow 2.5s ease-in-out infinite;
+      animation-delay: 0.3s, 0.3s;
+    }
+
     .message-value {
       font-size: 42px;
       font-weight: bold;
@@ -504,13 +584,37 @@
     }
 
     .comparison-item {
-      background-color: var(--stat-box-background);
-      border: 2px dashed var(--border-color);
-      border-radius: 8px;
-      padding: 16px;
+      background: linear-gradient(135deg, rgba(47, 47, 47, 0.6) 0%, rgba(43, 43, 43, 0.4) 100%);
+      border: 2px solid rgba(16, 163, 127, 0.3);
+      border-radius: 12px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(16, 163, 127, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .comparison-item:hover {
+      box-shadow: 0 12px 40px rgba(16, 163, 127, 0.25), inset 0 1px 2px rgba(16, 163, 127, 0.15);
+      border-color: rgba(16, 163, 127, 0.5);
+      transform: translateY(-4px);
+      background: linear-gradient(135deg, rgba(55, 55, 55, 0.8) 0%, rgba(47, 47, 47, 0.6) 100%);
+    }
+    
+    .comparison-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(16, 163, 127, 0.08), transparent 70%);
+      pointer-events: none;
     }
 
     .comparison-placeholder {
@@ -520,9 +624,17 @@
     }
 
     .comparison-value {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--primary-color);
+      display: inline-block;
+      min-width: 60px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-color), #10d981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse-glow 2s ease-in-out infinite;
+      letter-spacing: 0.5px;
     }
 
     .comparison-label {
@@ -534,6 +646,104 @@
       font-size: 11px;
       color: var(--muted-text);
       margin-top: 4px;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes glow-icon {
+      0%, 100% {
+        filter: drop-shadow(0 0 2px rgba(16, 163, 127, 0.3));
+        transform: scale(1);
+      }
+      50% {
+        filter: drop-shadow(0 0 16px rgba(16, 163, 127, 1)) drop-shadow(0 0 8px rgba(16, 163, 127, 0.6));
+        transform: scale(1.1);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        text-shadow: 0 0 10px rgba(16, 163, 127, 0.4);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(16, 163, 127, 0.8), 0 0 30px rgba(16, 163, 127, 0.4);
+      }
+    }
+
+    .comparison-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      animation: glow-icon 2.5s ease-in-out infinite;
+    }
+
+    .comparison-value {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .comparison-item {
+      animation: slideInUp 0.6s ease-out forwards;
+      transition: all 0.3s ease;
+    }
+
+    .comparison-item:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .comparison-item:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .comparison-item:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .comparison-item:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .comparison-value {
+      display: inline-block;
+      min-width: 60px;
+      text-align: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .comparison-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(16, 163, 127, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .comparison-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
     }
 
     @media (max-width: 768px) {
@@ -567,7 +777,7 @@
   <div class="header">
     <div class="header-content">
       <div class="header-logo">
-        <div class="logo-placeholder">LOGO</div>
+        <img src="icons/ecogpt-logo.png" alt="EcoGPT logo" class="site-logo" onerror="this.onerror=null;this.src='icons/icon128.png'">
         <div>See How Your AI Usage Impacts the Environment</div>
       </div>
     </div>
@@ -585,14 +795,14 @@
     <div id="today-stats" class="content-section active">
       <div class="usage-stats-grid">
         <div class="stat-box">
-          <div class="logo-placeholder" style="width: 32px; height: 32px; font-size: 8px;">ICON</div>
+          <div class="stat-icon message-icon">💬</div>
           <div class="stat-data">
             <div class="message-value" id="today-messages">0</div>
             <div class="stat-label">Messages sent</div>
           </div>
         </div>
         <div class="stat-box">
-          <div class="logo-placeholder" style="width: 32px; height: 32px; font-size: 8px;">ICON</div>
+          <div class="stat-icon energy-icon">⚡</div>
           <div class="stat-data">
             <div class="message-value" id="today-energy">0</div>
             <div class="stat-label">
@@ -607,27 +817,31 @@
 
       <!-- Comparisons Section -->
       <div class="comparisons-section">
-        <div class="comparisons-header">Energy Comparisons</div>
+        <div class="comparisons-header">Environmental Impact Comparisons</div>
         <div class="comparisons-grid">
           <div class="comparison-item">
+            <div class="comparison-icon">🌱</div>
             <div class="comparison-value" id="today-comparison-1">0</div>
-            <div class="comparison-label">Placeholder 1</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">g CO₂ Emitted</div>
+            <div class="comparison-note">Carbon footprint</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">🚗</div>
             <div class="comparison-value" id="today-comparison-2">0</div>
-            <div class="comparison-label">Placeholder 2</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">Miles Driven</div>
+            <div class="comparison-note">Car travel equivalent</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">🌳</div>
             <div class="comparison-value" id="today-comparison-3">0</div>
-            <div class="comparison-label">Placeholder 3</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">Trees (Annual)</div>
+            <div class="comparison-note">Fraction of mature tree's annual absorption</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">💧</div>
             <div class="comparison-value" id="today-comparison-4">0</div>
-            <div class="comparison-label">Placeholder 4</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">L Water Needed</div>
+            <div class="comparison-note">Energy cooling equivalent</div>
           </div>
         </div>
       </div>
@@ -637,14 +851,14 @@
     <div id="lifetime-stats" class="content-section">
       <div class="usage-stats-grid">
         <div class="stat-box">
-          <div class="logo-placeholder" style="width: 32px; height: 32px; font-size: 8px;">ICON</div>
+          <div class="stat-icon message-icon">💬</div>
           <div class="stat-data">
             <div class="message-value" id="lifetime-messages">0</div>
             <div class="stat-label">Messages sent</div>
           </div>
         </div>
         <div class="stat-box">
-          <div class="logo-placeholder" style="width: 32px; height: 32px; font-size: 8px;">ICON</div>
+          <div class="stat-icon energy-icon">⚡</div>
           <div class="stat-data">
             <div class="message-value" id="lifetime-energy">0</div>
             <div class="stat-label">
@@ -659,27 +873,31 @@
 
       <!-- Comparisons Section -->
       <div class="comparisons-section">
-        <div class="comparisons-header">Energy Comparisons</div>
+        <div class="comparisons-header">Environmental Impact Comparisons</div>
         <div class="comparisons-grid">
           <div class="comparison-item">
+            <div class="comparison-icon">🌱</div>
             <div class="comparison-value" id="lifetime-comparison-1">0</div>
-            <div class="comparison-label">Placeholder 1</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">kg CO₂ Equivalent</div>
+            <div class="comparison-note">Carbon footprint</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">🚗</div>
             <div class="comparison-value" id="lifetime-comparison-2">0</div>
-            <div class="comparison-label">Placeholder 2</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">km Driven</div>
+            <div class="comparison-note">Car travel equivalent</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">🌳</div>
             <div class="comparison-value" id="lifetime-comparison-3">0</div>
-            <div class="comparison-label">Placeholder 3</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">Trees Needed</div>
+            <div class="comparison-note">To offset CO₂</div>
           </div>
           <div class="comparison-item">
+            <div class="comparison-icon">💧</div>
             <div class="comparison-value" id="lifetime-comparison-4">0</div>
-            <div class="comparison-label">Placeholder 4</div>
-            <div class="comparison-note">Team: Add comparison here</div>
+            <div class="comparison-label">Swimming Pools</div>
+            <div class="comparison-note">Olympic-sized pools filled</div>
           </div>
         </div>
       </div>

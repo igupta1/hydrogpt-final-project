@@ -93,6 +93,13 @@
       flex-shrink: 0;
       white-space: nowrap;
     }
+    .header-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
     
     .header-logo .icon {
       margin-right: 8px;
@@ -276,7 +283,7 @@
 <body>
   <div class="header">
     <div class="header-logo">
-      <div class="icon"><i class="ri-leaf-line"></i></div>
+      <img src="icons/ecogpt-logo.png" alt="EcoGPT logo" class="popup-logo" onerror="this.onerror=null;this.src='icons/icon128.png'">
       <div>AI impact tracker</div>
     </div>
   </div>
