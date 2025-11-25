@@ -1,0 +1,352 @@
+<!-- popup.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>See How Your AI Usage Impacts the Environment</title>
+  <!-- Remix Icon CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Colors */
+      --primary-color: #3E7B67;
+      --primary-color-hover: #2E5B4D;
+      --text-color: #343541;
+      --background-color: #f7f7f8;
+      --card-background: white;
+      --secondary-background: transparent;
+      --stat-box-background: transparent;
+      --equiv-item-background: #f6f8fa;
+      --border-color: #D5DFD9;
+      --tooltip-background: #333;
+      --tooltip-text: white;
+      --muted-text: #666;
+      --header-text: #444;
+      --divider-color: #ddd;
+      --chart-bar-color: var(--primary-color);
+      --chart-bar-hover: var(--primary-color-hover);
+      --link-color: var(--primary-color);
+      --tab-active-background: rgba(62, 123, 103, 0.1);
+      --tab-active-color: var(--primary-color);
+    }
+    
+    .estimation-disclaimer {
+      font-size: 10px;
+      color: #999;
+      text-align: center;
+      margin: 0 10px 12px;
+      padding: 0 5px;
+    }
+
+    body {
+      width: 400px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      background-color: var(--background-color);
+      padding-bottom: 16px;
+    }
+
+    .header {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .info-icon {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    
+    .info-icon i {
+      font-size: 20px;
+      color: var(--primary-color);
+    }
+    
+    .info-icon:hover {
+      background-color: rgba(62, 123, 103, 0.1);
+      text-decoration: none;
+    }
+    
+    .header-logo {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'Quicksand', sans-serif;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    
+    .header-logo .icon {
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .header-logo .icon i {
+      font-size: 22px;
+      color: var(--primary-color);
+    }
+    
+    
+    .methodology-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .methodology-link:hover {
+      text-decoration: underline;
+    }
+    
+    .tab-container {
+      display: flex;
+      background-color: var(--background-color);
+      padding: 8px 12px;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .tabs-group {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .tab {
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    
+    .tab.active {
+      background-color: var(--tab-active-background);
+      color: var(--tab-active-color);
+      font-weight: 600;
+    }
+    
+    .tab:hover:not(.active) {
+      background-color: rgba(0,0,0,0.03);
+    }
+    
+    .content-section {
+      background-color: var(--card-background);
+      border-radius: 8px;
+      margin: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    
+    .stats-container {
+      display: none;
+    }
+    
+    .stats-container.active {
+      display: block;
+    }
+    
+    .section-header {
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: var(--header-text);
+    }
+    
+    .usage-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    
+    .stat-box {
+      padding: 12px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      gap: 10px;
+    }
+    
+    .stat-data {
+      flex: 1;
+    }
+    
+    .stat-box .emoji {
+      font-size: 24px;
+    }
+    
+    .message-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    
+    .token-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted-text);
+    }
+    
+    .token-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .token-divider {
+      height: 20px;
+      width: 1px;
+      background-color: var(--divider-color);
+      margin: 0 12px;
+    }
+    
+    .info-tooltip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-text);
+      cursor: help;
+      position: relative;
+      flex-shrink: 0;
+    }
+    
+    .info-tooltip i {
+      font-size: 14px;
+    }
+    
+    .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--tooltip-background);
+      color: var(--tooltip-text);
+      text-align: center;
+      border-radius: 4px;
+      padding: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    
+    .info-tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted-text);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+  </style>
+  <script src="energy-calculator.js"></script>
+  <script src="popup.js"></script>
+</head>
+<body>
+  <div class="header">
+    <div class="header-logo">
+      <div class="icon"><i class="ri-leaf-line"></i></div>
+      <div>AI impact tracker</div>
+    </div>
+  </div>
+  
+  <div class="tab-container">
+    <div class="tabs-group">
+      <div class="tab active" id="today-tab">Today</div>
+      <div class="tab" id="lifetime-tab">Lifetime</div>
+    </div>
+    <a href="#" class="methodology-link" style="display: none;">methodology</a>
+  </div>
+  
+  <!-- Today Stats Container -->
+  <div id="today-stats" class="stats-container active">
+    <div class="content-section">
+      <div class="usage-stats-grid">
+        <div class="stat-box">
+          <div class="emoji">💬</div>
+          <div class="stat-data">
+            <div class="message-value" id="today-messages">0</div>
+            <div class="stat-label">Messages sent</div>
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="emoji">⚡️</div>
+          <div class="stat-data">
+            <div class="message-value" id="today-energy">0</div>
+            <div class="stat-label">
+              <span>Watt-hours used</span>
+              <span class="info-tooltip"><i class="ri-question-line"></i>
+                <div class="tooltip-text">This is an estimate based on energy usage patterns for large Mixture of Experts (MoE) models with 300B total parameters and 30-90B active parameters per inference.</div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Lifetime Stats Container -->
+  <div id="lifetime-stats" class="stats-container">
+    <div class="content-section">
+      <div class="usage-stats-grid">
+        <div class="stat-box">
+          <div class="emoji">💬</div>
+          <div class="stat-data">
+            <div class="message-value" id="lifetime-messages">0</div>
+            <div class="stat-label">Messages sent</div>
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="emoji">⚡️</div>
+          <div class="stat-data">
+            <div class="message-value" id="lifetime-energy">0</div>
+            <div class="stat-label">
+              <span>Watt-hours used</span>
+              <span class="info-tooltip"><i class="ri-question-line"></i>
+                <div class="tooltip-text">This is an estimate based on energy usage patterns for large Mixture of Experts (MoE) models with 300B total parameters and 30-90B active parameters per inference.</div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="estimation-disclaimer">
+    The numbers are estimations based on realistic assumptions.
+  </div>
+
+  
+</body>
+</html>

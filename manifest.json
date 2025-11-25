@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "See How Your AI Usage Impacts the Environment",
+    "version": "1.0.0",
+    "description": "Track the environmental impact of your AI usage with real-time energy consumption metrics",
+    "permissions": ["storage"],
+    "host_permissions": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "ishaan@hydrogpt.extension",
+        "strict_min_version": "109.0"
+      }
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+        "js": ["energy-calculator.js", "content.js"],
+        "run_at": "document_start"
+      }
+    ],
+    "action": {
+      "default_icon": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+      }
+    },
+    "icons": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+   }
