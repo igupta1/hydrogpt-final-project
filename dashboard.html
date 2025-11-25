@@ -240,6 +240,163 @@
       margin: 0 auto;
     }
 
+    .learn-more-video {
+      width: 100%;
+      margin: 24px auto 8px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      aspect-ratio: 16 / 9;
+    }
+
+    .learn-more-video iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .learn-more-guide {
+      margin-top: 28px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .guide-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--header-text);
+      margin-bottom: 16px;
+    }
+
+    .guide-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .guide-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .guide-step-emoji {
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .guide-step-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .guide-step-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      font-size: 15px;
+    }
+
+    .guide-step-text {
+      font-size: 14px;
+      color: var(--text-color);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .learn-more-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .resource-group {
+      background-color: var(--stat-box-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .resource-group-header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .group-emoji {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .group-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--header-text);
+    }
+
+    .group-subtitle {
+      font-size: 14px;
+      color: var(--muted-text);
+    }
+
+    .resource-module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .resource-module {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .resource-module:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-color);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .module-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .module-desc {
+      font-size: 13px;
+      color: var(--muted-text);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .module-link {
+      font-size: 12px;
+      color: var(--primary-color);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .module-link i {
+      font-size: 14px;
+    }
+
     .learn-more-heading {
       font-size: 28px;
       font-weight: 600;
@@ -610,10 +767,161 @@ totalEnergy = outputTokens × energyPerToken × PUE
         <p class="learn-more-description">
           Learn more about how AI models consume energy and what you can do to make a difference.
         </p>
-        <div class="video-placeholder">
-          <div class="video-placeholder-icon">▶</div>
-          <div class="video-placeholder-text">Educational video will be embedded here</div>
-          <div class="video-placeholder-text" style="font-size: 12px; opacity: 0.7;">Designer: Add video embed code here</div>
+        <div class="learn-more-video">
+          <iframe src="https://www.youtube.com/embed/cz3AYYZBiGs?start=35"
+                  title="AI energy impact overview video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        </div>
+        <div class="learn-more-guide">
+          <div class="guide-title">✅ Quick Guide: How Your LLM Usage Affects Energy & How to Use It Efficiently</div>
+          <div class="guide-steps">
+            <div class="guide-step">
+              <div class="guide-step-emoji">⚡</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">1. Every token costs energy</div>
+                <p class="guide-step-text">LLMs process text in tokens, not words. More tokens = more compute = more energy. A typical prompt+response (a few hundred tokens) uses roughly the energy of running a small LED bulb for a minute.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🌍</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">2. Longer prompts/responses increase carbon impact</div>
+                <p class="guide-step-text">Energy use scales with total tokens (input + output). Cutting unnecessary words, repeated instructions, or filler reduces footprint. Avoid “tell me everything about…” when you only need a specific detail.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🧠</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">3. Clear prompts are more efficient</div>
+                <p class="guide-step-text">Well-structured prompts get better answers with fewer retries. Use bullet points, numbered steps, and concrete examples to avoid follow-up prompts that add more tokens.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🔁</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">4. Avoid redundant prompts</div>
+                <p class="guide-step-text">Ask multiple things in one clear request instead of several separate ones. Reusing the same conversation keeps shared context so you don’t resend large prompts.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🎯</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">5. Precision beats length</div>
+                <p class="guide-step-text">“Summarize to bullet points focusing on X” is more efficient than “Explain everything.” “Give me 5 options” uses fewer tokens than “Brainstorm until I say stop.”</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🧩</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">6. Model choice matters</div>
+                <p class="guide-step-text">Smaller or optimized models draw far less energy. Reserve large models for complex reasoning or code; for rewrites or simple Q&A, lighter models are more efficient.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🏗️</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">7. Inference is the main ongoing cost</div>
+                <p class="guide-step-text">Training consumes big energy upfront, but it’s everyday inference that drives the footprint for users. Data centers add cooling, networking, and other overhead to every request.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">🔋</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">8. Token-saving = energy-saving</div>
+                <p class="guide-step-text">Remove fluff, avoid repeating system instructions, and cap output length (“in 3–4 sentences”, “no more than 100 words”). These small tweaks cut energy in each response.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step-emoji">💡</div>
+              <div class="guide-step-body">
+                <div class="guide-step-title">9. Better prompts = sustainability</div>
+                <p class="guide-step-text">Efficient prompts reduce retries, which often consume more energy than one well-crafted request. Good prompting delivers faster answers and lowers the environmental impact.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="learn-more-groups">
+          <div class="resource-group">
+            <div class="resource-group-header">
+              <div class="group-emoji">🔥</div>
+              <div>
+                <div class="group-title">Energy Use of LLMs & AI Infrastructure</div>
+                <div class="group-subtitle">Global outlooks on electricity demand, cooling, and scaling pressures</div>
+              </div>
+            </div>
+            <div class="resource-module-grid">
+              <a class="resource-module" href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">IEA – Energy and AI (2024)</div>
+                <p class="module-desc">International Energy Agency projections for how AI reshapes power demand this decade.</p>
+                <span class="module-link">Read report <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://www.carbonbrief.org/ai-five-charts-that-put-data-centre-energy-use-and-emissions-into-context/?utm_source=carbonbrief&utm_campaign=embedded" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Carbon Brief – Five Charts on AI Energy</div>
+                <p class="module-desc">Clear visualizations placing AI-driven data center usage in context.</p>
+                <span class="module-link">Read article <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">MIT CSAIL – Generative AI’s Environmental Impact</div>
+                <p class="module-desc">Explains energy, water, and infrastructure demands of large generative models.</p>
+                <span class="module-link">Read article <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://www.sciencedirect.com/science/article/pii/S2542435123003653" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Alex de Vries – Growing AI Energy Footprint</div>
+                <p class="module-desc">Peer-reviewed commentary on long-term trends in AI and data center electricity use.</p>
+                <span class="module-link">Read paper <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+            </div>
+          </div>
+
+          <div class="resource-group">
+            <div class="resource-group-header">
+              <div class="group-emoji">⚙️</div>
+              <div>
+                <div class="group-title">Prompt Efficiency & Inference Optimization</div>
+                <div class="group-subtitle">Research on lowering energy per response with smarter prompts and pipelines</div>
+              </div>
+            </div>
+            <div class="resource-module-grid">
+              <a class="resource-module" href="https://www.researchgate.net/publication/387953996_Prompt_engineering_and_its_implications_on_the_energy_consumption_of_Large_Language_Models" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Prompt Engineering & Energy Consumption (2025)</div>
+                <p class="module-desc">L’Aquila University study showing structured prompts reduce energy budgets.</p>
+                <span class="module-link">Read study <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://aclanthology.org/2025.acl-long.1563.pdf" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Energy Considerations of LLM Inference Workloads</div>
+                <p class="module-desc">ACL research quantifying savings from batching, caching, and prompt design.</p>
+                <span class="module-link">Read paper <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+            </div>
+          </div>
+
+          <div class="resource-group">
+            <div class="resource-group-header">
+              <div class="group-emoji">🌍</div>
+              <div>
+                <div class="group-title">Environmental Impact & Lifecycle</div>
+                <div class="group-subtitle">Lifecycle assessments and policy guidance for sustainable AI</div>
+              </div>
+            </div>
+            <div class="resource-module-grid">
+              <a class="resource-module" href="https://www.sciencedirect.com/science/article/pii/S2095809924002315" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Lifecycle Energy & Carbon of LLM Chatbots (2024)</div>
+                <p class="module-desc">Detailed accounting of training, deployment, hardware, and end-of-life emissions.</p>
+                <span class="module-link">Read paper <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://rmi.org/insight/powering-the-data-center-boom-with-low-carbon-solutions/" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">RMI – Powering the Data-Center Boom</div>
+                <p class="module-desc">Strategies to decouple hyperscale growth from emissions via clean energy.</p>
+                <span class="module-link">Read insight <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+              <a class="resource-module" href="https://earth.org/environmental-impact-chatgpt/" target="_blank" rel="noopener noreferrer">
+                <div class="module-title">Earth.org – Environmental Impact of ChatGPT</div>
+                <p class="module-desc">Accessible overview for general audiences about ChatGPT’s footprint.</p>
+                <span class="module-link">Read article <i class="ri-arrow-right-up-line"></i></span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
