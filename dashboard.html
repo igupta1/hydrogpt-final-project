@@ -907,73 +907,177 @@
     <div id="methodology-stats" class="content-section">
       <div class="methodology-content">
         <div class="methodology-section">
-          <h2 class="methodology-heading">Community Estimates Methodology</h2>
+          <h2 class="methodology-heading">Energy Calculation Methodology</h2>
           <p class="methodology-text">
-            Our energy calculations are based on academic research and inspired by the <a href="https://ecologits.ai/0.2/methodology/llm_inference/" target="_blank" style="color: var(--primary-color);">EcoLogits methodology</a>, modeling ChatGPT as a large Mixture of Experts (MoE) model.
+            This methodology estimates the energy consumption and CO2 emissions of large language model (LLM) inference using a FLOP-based energy model derived from <a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use" target="_blank" style="color: var(--primary-color);">Epoch AI's research on ChatGPT energy consumption</a>. The approach models both the prefill phase (processing input tokens) and decode phase (generating output tokens) with different computational characteristics, updated to reflect estimated GPT-5 specifications and modern datacenter infrastructure.
           </p>
         </div>
 
         <div class="methodology-section">
-          <h3 class="methodology-subheading">Energy Consumption Formula</h3>
+          <h3 class="methodology-subheading">1. Model Parameters (GPT-5 Proxy)</h3>
+          <p class="methodology-text"><span class="methodology-strong">Updated Model Specifications:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Total Parameters:</span> 300 billion (used for memory residency estimation)</li>
+            <li><span class="methodology-strong">Active Parameters:</span> 101.17 billion (33.7% activation ratio for MoE architecture)</li>
+            <li><span class="methodology-strong">Attention Coefficient (a):</span> 2,635,100 (derived from 4×L×h_q×d_h scaling)</li>
+            <li><span class="methodology-strong">Architecture:</span> Mixture of Experts (MoE) with sparse activation</li>
+          </ul>
+          <div class="methodology-highlight">
+            <p class="methodology-text" style="margin-bottom: 0;">
+              <span class="methodology-strong">Note:</span> These parameters represent estimates for a GPT-5 class model, scaling from known GPT-4o characteristics (estimated 200B total parameters, ~100B active) to reflect next-generation capabilities.
+            </p>
+          </div>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">2. Hardware Infrastructure (Modern Datacenter Setup)</h3>
+          <p class="methodology-text"><span class="methodology-strong">GPU Specifications (H100-class):</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Thermal Design Power:</span> 700W per GPU</li>
+            <li><span class="methodology-strong">Total Power per GPU:</span> ~1,500W (including server overhead, cooling, networking)</li>
+            <li><span class="methodology-strong">Compute Capacity:</span> 1.979×10¹⁵ FLOP/s per GPU (BF16 precision, theoretical peak)</li>
+            <li><span class="methodology-strong">Practical Utilization:</span> 10% for inference workloads (memory-bound operations)</li>
+            <li><span class="methodology-strong">Memory:</span> 80 GB per GPU</li>
+            <li><span class="methodology-strong">Weight Quantization:</span> 4-bit precision for memory calculations</li>
+          </ul>
+          <p class="methodology-text"><span class="methodology-strong">Datacenter Infrastructure:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Power Usage Effectiveness (PUE):</span> 1.2</li>
+            <li><span class="methodology-strong">Server Configuration:</span> 8 GPUs per server node</li>
+            <li><span class="methodology-strong">Server Overhead:</span> 800W per 8-GPU node (excluding GPU power)</li>
+            <li><span class="methodology-strong">Average Power Utilization:</span> 70% of peak power consumption</li>
+          </ul>
           <p class="methodology-text">
-            The energy consumption per token is calculated using the EcoLogits methodology:
+            <em>Based on NVIDIA DGX H100 server specifications and industry-standard datacenter configurations.</em>
+          </p>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">3. FLOP Estimation Model</h3>
+          <p class="methodology-text">
+            Following the Epoch AI methodology, computational workload is divided into two phases:
           </p>
           <div class="methodology-code">
-energyPerToken = ENERGY_ALPHA × activeParamsBillions + ENERGY_BETA<br>
-totalEnergy = outputTokens × energyPerToken × PUE
+<span class="methodology-strong">Prefill Phase (Input Processing):</span><br>
+F_prefill = 2 × N_active × T_in + a × T_in²<br><br>
+<span class="methodology-strong">Decode Phase (Output Generation):</span><br>
+F_decode = 2 × N_active × T_out + a × (T_in × T_out + T_out × (T_out - 1) / 2)
           </div>
           <p class="methodology-text">Where:</p>
           <ul class="methodology-list">
-            <li><span class="methodology-strong">ENERGY_ALPHA</span> = 8.91e-5 Wh/token/B-params (Energy coefficient for model parameters)</li>
-            <li><span class="methodology-strong">ENERGY_BETA</span> = 1.43e-3 Wh/token (Base energy per token)</li>
-            <li><span class="methodology-strong">activeParamsBillions</span> = 60 billion (20% of 300B total parameters)</li>
-            <li><span class="methodology-strong">PUE</span> = 1.2 (Power Usage Effectiveness for data center overhead)</li>
+            <li><span class="methodology-strong">N_active</span> = Active parameters (101.17B for GPT-5 proxy)</li>
+            <li><span class="methodology-strong">T_in</span> = Input token count</li>
+            <li><span class="methodology-strong">T_out</span> = Output token count</li>
+            <li><span class="methodology-strong">a</span> = Attention coefficient (2.6351×10⁶)</li>
           </ul>
-          <p class="methodology-text">
-            This formula is derived from academic research on LLM energy consumption, scaling with both the number of active parameters and the total tokens processed.
-          </p>
-        </div>
-
-        <div class="methodology-section">
-          <h3 class="methodology-subheading">Core Methodology</h3>
-          <p class="methodology-text">
-            The calculations focus on <span class="methodology-strong">inference-time energy consumption</span>, which represents the energy used when interacting with an LLM.
-          </p>
-          <p class="methodology-text">Key components:</p>
+          <p class="methodology-text"><span class="methodology-strong">Key Improvements over Linear Models:</span></p>
           <ul class="methodology-list">
-            <li><span class="methodology-strong">Token-based estimation:</span> Energy consumption is calculated per output token, using character count as a proxy (roughly 4 characters = 1 token)</li>
-            <li><span class="methodology-strong">Real-time calculation:</span> Energy consumption is calculated as conversations happen based on the per-token estimates</li>
+            <li>Accounts for quadratic scaling of attention mechanisms with input length</li>
+            <li>Separates prefill and decode computational costs</li>
+            <li>Reflects actual transformer architecture FLOP requirements</li>
           </ul>
         </div>
 
         <div class="methodology-section">
-          <h3 class="methodology-subheading">Assumptions for ChatGPT (GPT-5)</h3>
+          <h3 class="methodology-subheading">4. Token Estimation</h3>
+          <div class="methodology-code">
+Estimated_tokens = ceil(text_length_characters / 4)
+          </div>
+          <p class="methodology-text">
+            This heuristic approximates OpenAI's tokenization where 1 token ≈ 0.75 words ≈ 4 characters on average.
+          </p>
+          <p class="methodology-text"><span class="methodology-strong">Typical Query Assumptions:</span></p>
           <ul class="methodology-list">
-            <li><span class="methodology-strong">Total parameters:</span> 300 billion parameters</li>
-            <li><span class="methodology-strong">Active parameters:</span> 60 billion (average, range: 30-90B)</li>
-            <li><span class="methodology-strong">Activation ratio:</span> 20% (Mixture of Experts architecture)</li>
-            <li><span class="methodology-strong">Quantization:</span> 4-bit precision</li>
-            <li><span class="methodology-strong">Data center PUE:</span> 1.2</li>
-            <li><span class="methodology-strong">GPU configuration:</span> Estimated 8 GPUs per server, 80GB memory per GPU</li>
+            <li><span class="methodology-strong">Average Output:</span> 500 tokens (~400 words, based on Epoch AI analysis)</li>
+            <li><span class="methodology-strong">Typical Input:</span> Variable, from short prompts (~50 tokens) to long documents (10k-100k tokens)</li>
+          </ul>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">5. Energy Consumption Model</h3>
+          <div class="methodology-code">
+<span class="methodology-strong">GPU Energy (following Epoch AI methodology):</span><br>
+GPU_energy = (num_GPUs × GPU_total_power × Power_utilization × t_total) / 3600<br>
+GPU_energy = (3 × 1500W × 0.70 × t_total) / 3600  [Wh]<br><br>
+<span class="methodology-strong">Server Overhead Energy:</span><br>
+Server_overhead = (800W × t_total × 3) / (3600 × 8)  [Wh]<br><br>
+<span class="methodology-strong">Total Facility Energy:</span><br>
+Total_energy = 1.2 × (GPU_energy + Server_overhead)  [Wh]<br><br>
+<span class="methodology-strong">Minimum Energy Floor:</span><br>
+Final_energy = max(Total_energy, 0.01)  [Wh]
+          </div>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">6. Carbon Emissions Calculation</h3>
+          <div class="methodology-code">
+CO2_emissions = (Final_energy / 1000) × 0.418  [kg CO2e]
+          </div>
+          <p class="methodology-text">
+            Using global average grid carbon intensity of 0.418 kg CO2e/kWh.
+          </p>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">7. Scaling Characteristics</h3>
+          <p class="methodology-text"><span class="methodology-strong">Input Length Scaling:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Short queries</span> (50 tokens in, 500 tokens out): ~0.3 Wh</li>
+            <li><span class="methodology-strong">Medium documents</span> (10k tokens in, 500 tokens out): ~2.5 Wh</li>
+            <li><span class="methodology-strong">Large documents</span> (100k tokens in, 500 tokens out): ~40 Wh</li>
+          </ul>
+          <div class="methodology-highlight">
+            <p class="methodology-text" style="margin-bottom: 0;">
+              <span class="methodology-strong">Note:</span> Input processing cost is incurred once per conversation due to KV caching.
+            </p>
+          </div>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">8. Key Assumptions and Limitations</h3>
+          <p class="methodology-text"><span class="methodology-strong">Research-Based Assumptions:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Hardware Utilization:</span> 10% effective utilization for inference (Epoch AI finding)</li>
+            <li><span class="methodology-strong">Power Scaling:</span> 70% average power consumption vs. peak rating</li>
+            <li><span class="methodology-strong">Model Architecture:</span> MoE with 33.7% parameter activation ratio</li>
+            <li><span class="methodology-strong">Datacenter Efficiency:</span> Modern H100-based infrastructure</li>
+          </ul>
+          <p class="methodology-text"><span class="methodology-strong">Known Limitations:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">Token Estimation:</span> Character-based approximation vs. actual tokenization</li>
+            <li><span class="methodology-strong">Model Scaling:</span> GPT-5 parameters are estimated, not confirmed</li>
+            <li><span class="methodology-strong">Infrastructure Variation:</span> Actual datacenter configurations may differ</li>
+            <li><span class="methodology-strong">Optimization Techniques:</span> Advanced serving optimizations not modeled</li>
+          </ul>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">9. Validation Against Benchmarks</h3>
+          <p class="methodology-text"><span class="methodology-strong">Comparison with Epoch AI Findings:</span></p>
+          <ul class="methodology-list">
+            <li><span class="methodology-strong">GPT-4o baseline:</span> ~0.3 Wh per typical query (500 output tokens)</li>
+            <li><span class="methodology-strong">Our GPT-5 proxy:</span> Scaled appropriately for larger model size</li>
+            <li><span class="methodology-strong">Methodology alignment:</span> FLOP-based calculation with realistic utilization factors</li>
+          </ul>
+        </div>
+
+        <div class="methodology-section">
+          <h3 class="methodology-subheading">Data Sources and References</h3>
+          <ul class="methodology-list">
+            <li><a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use" target="_blank" style="color: var(--primary-color);">Epoch AI - How much energy does ChatGPT use?</a> - Primary methodology</li>
+            <li>NVIDIA H100 documentation and DGX server specifications</li>
+            <li>Estimated scaling from known GPT-4o characteristics</li>
+            <li>Academic research on LLM energy consumption patterns</li>
+            <li>Global average emission factors for electricity generation</li>
           </ul>
         </div>
 
         <div class="methodology-section">
           <div class="methodology-highlight">
             <p class="methodology-text" style="margin-bottom: 0;">
-              <span class="methodology-strong">Important Note:</span> These are estimates based on available information and academic research. Exact energy measurements would require direct data from model providers, which is currently not publicly available. The need for more transparency from AI providers regarding their actual energy usage remains critical.
+              <span class="methodology-strong">Important Note:</span> This updated methodology provides a more accurate and research-backed approach to estimating the environmental impact of next-generation LLM inference, incorporating the latest findings on model efficiency and datacenter operations while scaling to anticipated GPT-5 class capabilities. These are estimates based on available information and academic research. Exact energy measurements would require direct data from model providers, which is currently not publicly available.
             </p>
           </div>
-        </div>
-
-        <div class="methodology-section">
-          <h3 class="methodology-subheading">Data Sources</h3>
-          <ul class="methodology-list">
-            <li><a href="https://ecologits.ai/0.2/methodology/llm_inference/" target="_blank" style="color: var(--primary-color);">EcoLogits Methodology</a> - LLM energy consumption framework</li>
-            <li>Academic research on AI model energy consumption patterns</li>
-            <li>Publicly available information about model architectures</li>
-            <li>Industry benchmarks for data center efficiency</li>
-          </ul>
         </div>
       </div>
     </div>
