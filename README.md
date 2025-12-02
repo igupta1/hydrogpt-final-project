@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icons/ecogpt-logo.png" alt="EcoGPT Logo" width="120">
+</p>
+
 # AI Impact Tracker
 
 A Chrome extension that tracks the environmental impact of your ChatGPT usage by calculating real-time energy consumption and CO2 emissions.
