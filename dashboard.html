@@ -769,6 +769,138 @@
         font-size: 32px;
       }
     }
+
+    /* Settings Styles */
+    .settings-content {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .settings-heading {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--header-text);
+      margin-bottom: 32px;
+    }
+
+    .settings-section {
+      background: linear-gradient(135deg, var(--stat-box-background) 0%, rgba(47, 47, 47, 0.8) 100%);
+      border: 1px solid rgba(16, 163, 127, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .settings-subheading {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0 0 8px 0;
+    }
+
+    .settings-description {
+      font-size: 14px;
+      color: var(--muted-text);
+      margin: 0 0 20px 0;
+    }
+
+    .settings-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 16px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid var(--border-color);
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .radio-option:hover {
+      background-color: rgba(16, 163, 127, 0.08);
+      border-color: rgba(16, 163, 127, 0.3);
+    }
+
+    .radio-option:has(input:checked) {
+      border-color: var(--primary-color);
+      background-color: rgba(16, 163, 127, 0.12);
+      box-shadow: 0 4px 16px rgba(16, 163, 127, 0.15);
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-custom {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      margin-right: 16px;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option:has(input:checked) .radio-custom {
+      border-color: var(--primary-color);
+    }
+
+    .radio-custom::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      transition: transform 0.2s ease;
+    }
+
+    .radio-option:has(input:checked) .radio-custom::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .radio-icon {
+      font-size: 20px;
+    }
+
+    .radio-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .radio-description {
+      width: 100%;
+      margin-top: 8px;
+      margin-left: 38px;
+      font-size: 13px;
+      color: var(--muted-text);
+    }
+
+    .settings-note {
+      font-size: 12px;
+      color: var(--muted-text);
+      margin: 20px 0 0 0;
+      font-style: italic;
+      text-align: center;
+    }
   </style>
   <script src="energy-calculator.js"></script>
   <script src="dashboard.js"></script>
@@ -789,6 +921,7 @@
       <div class="tab" id="lifetime-tab">Lifetime</div>
       <div class="tab" id="methodology-tab">Methodology</div>
       <div class="tab" id="learn-more-tab">Learn More</div>
+      <div class="tab" id="settings-tab">Settings</div>
     </div>
     
     <!-- Today Stats -->
@@ -1244,6 +1377,75 @@ CO2_emissions = (Final_energy / 1000) × 0.418  [kg CO2e]
               </a>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div id="settings-stats" class="content-section">
+      <div class="settings-content">
+        <h2 class="settings-heading">Settings</h2>
+        
+        <div class="settings-section">
+          <h3 class="settings-subheading">Widget Display</h3>
+          <p class="settings-description">Choose which statistic to show on the ChatGPT widget:</p>
+          <div class="settings-options">
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="electricity" checked>
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">⚡️</span>
+                <span class="radio-text">Electricity (Wh)</span>
+              </span>
+              <span class="radio-description">Shows energy consumption in Watt-hours</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="co2">
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">🌍</span>
+                <span class="radio-text">CO₂ Emissions (g)</span>
+              </span>
+              <span class="radio-description">Shows carbon dioxide emissions in grams</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="miles">
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">🚗</span>
+                <span class="radio-text">Miles Driven</span>
+              </span>
+              <span class="radio-description">Shows equivalent car travel distance</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="trees">
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">🌳</span>
+                <span class="radio-text">Trees (Annual)</span>
+              </span>
+              <span class="radio-description">Shows fraction of a tree's annual CO₂ absorption</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="water">
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">💧</span>
+                <span class="radio-text">Water (L)</span>
+              </span>
+              <span class="radio-description">Shows water needed for energy cooling</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="widget-stat" value="messages">
+              <span class="radio-custom"></span>
+              <span class="radio-label">
+                <span class="radio-icon">💬</span>
+                <span class="radio-text">Messages Sent</span>
+              </span>
+              <span class="radio-description">Shows the number of messages sent today</span>
+            </label>
+          </div>
+          <p class="settings-note">Changes apply immediately to the ChatGPT page.</p>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
     "name": "See How Your AI Usage Impacts the Environment",
     "version": "1.0.0",
     "description": "Track the environmental impact of your AI usage with real-time energy consumption metrics",
-    "permissions": ["storage"],
+    "permissions": ["storage", "tabs"],
     "host_permissions": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
     "background": {
       "service_worker": "background.js"

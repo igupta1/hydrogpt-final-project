@@ -2,6 +2,7 @@ const logs = [];
 let conversationId = null;
 let isExtensionContextValid = true;
 let intervalIds = [];
+let widgetStatPreference = 'electricity'; // Default to electricity
 
 function checkExtensionContext() {
   try {
@@ -462,6 +463,7 @@ function updateUsageNotification() {
     
     let todayLogs = [];
     let todayEnergyUsage = 0;
+    let todayCO2Emissions = 0;
     let todayMessages = 0;
     
     try {
@@ -479,6 +481,7 @@ function updateUsageNotification() {
         todayLogs.forEach(log => {
           try {
             todayEnergyUsage += log.energyUsage || 0;
+            todayCO2Emissions += log.co2Emissions || 0;
           } catch (energyError) {
           }
         });
@@ -487,11 +490,51 @@ function updateUsageNotification() {
       console.error("Error processing logs for notification:", logsError);
     }
     
-    const formattedEnergy = todayEnergyUsage.toFixed(1);
-    const updateTime = new Date().toLocaleTimeString();
-    let message = `<span class="ai-impact-emoji">⚡️</span> <span class="ai-impact-energy">${formattedEnergy} Wh consumed today</span>`;
+    // Conversion factors (same as dashboard.js)
+    const CO2_GRAMS_PER_KWH = 367;
+    const MILES_PER_KWH_EQUIVALENT = 0.67;
+    const MATURE_TREES_PER_KG_CO2 = 1 / 22;
+    const WATER_LITERS_PER_KWH = 2.2;
     
-    console.log(`[${updateTime}] Updating energy notification: ${formattedEnergy} Wh`);
+    const kwh = todayEnergyUsage / 1000;
+    
+    const updateTime = new Date().toLocaleTimeString();
+    let message = '';
+    
+    switch (widgetStatPreference) {
+      case 'co2':
+        // Convert kg to g for display (1 kg = 1000 g)
+        const co2InGrams = (todayCO2Emissions * 1000).toFixed(1);
+        message = `<span class="ai-impact-emoji">🌍</span> <span class="ai-impact-energy">${co2InGrams} g CO₂ emitted today</span>`;
+        console.log(`[${updateTime}] Updating CO2 notification: ${co2InGrams} g`);
+        break;
+      case 'miles':
+        const milesDriven = (kwh * MILES_PER_KWH_EQUIVALENT).toFixed(2);
+        message = `<span class="ai-impact-emoji">🚗</span> <span class="ai-impact-energy">${milesDriven} miles driven today</span>`;
+        console.log(`[${updateTime}] Updating miles notification: ${milesDriven}`);
+        break;
+      case 'trees':
+        const co2kg = (kwh * CO2_GRAMS_PER_KWH) / 1000;
+        const treesNeeded = (co2kg * MATURE_TREES_PER_KG_CO2).toFixed(3);
+        message = `<span class="ai-impact-emoji">🌳</span> <span class="ai-impact-energy">${treesNeeded} trees (annual) today</span>`;
+        console.log(`[${updateTime}] Updating trees notification: ${treesNeeded}`);
+        break;
+      case 'water':
+        const waterLiters = (kwh * WATER_LITERS_PER_KWH).toFixed(2);
+        message = `<span class="ai-impact-emoji">💧</span> <span class="ai-impact-energy">${waterLiters} L water used today</span>`;
+        console.log(`[${updateTime}] Updating water notification: ${waterLiters} L`);
+        break;
+      case 'messages':
+        message = `<span class="ai-impact-emoji">💬</span> <span class="ai-impact-energy">${todayMessages} message${todayMessages !== 1 ? 's' : ''} sent today</span>`;
+        console.log(`[${updateTime}] Updating messages notification: ${todayMessages}`);
+        break;
+      case 'electricity':
+      default:
+        const formattedEnergy = todayEnergyUsage.toFixed(1);
+        message = `<span class="ai-impact-emoji">⚡️</span> <span class="ai-impact-energy">${formattedEnergy} Wh consumed today</span>`;
+        console.log(`[${updateTime}] Updating energy notification: ${formattedEnergy} Wh`);
+        break;
+    }
     
     try {
       messageElement.innerHTML = message;
@@ -596,6 +639,13 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
         }
         return true;
       }
+      
+      if (message.action === "updateWidgetStat") {
+        widgetStatPreference = message.stat || 'electricity';
+        console.log('Widget stat preference updated to:', widgetStatPreference);
+        updateUsageNotification();
+        return true;
+      }
     });
   } catch (e) {
     console.warn('Failed to add message listener:', e);
@@ -660,7 +710,7 @@ function validateAndRepairStorage() {
 function initializeWithRetry(retryCount = 3) {
   console.log(`Initializing with ${retryCount} retries remaining`);
   try {
-    chrome.storage.local.get(['chatgptLogs', 'extensionVersion'], (result) => {
+    chrome.storage.local.get(['chatgptLogs', 'extensionVersion', 'widgetStatPreference'], (result) => {
       if (chrome.runtime.lastError) {
         console.error("Error loading logs:", chrome.runtime.lastError);
         
@@ -683,6 +733,10 @@ function initializeWithRetry(retryCount = 3) {
       const currentVersion = chrome.runtime.getManifest().version;
       const storedVersion = result.extensionVersion || '0.0';
       console.log(`Extension version: Current=${currentVersion}, Stored=${storedVersion}`);
+      
+      // Load widget stat preference
+      widgetStatPreference = result.widgetStatPreference || 'electricity';
+      console.log(`Widget stat preference: ${widgetStatPreference}`);
       
       if (result && result.chatgptLogs && Array.isArray(result.chatgptLogs)) {
         try {

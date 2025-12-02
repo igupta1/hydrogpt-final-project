@@ -27,6 +27,20 @@ document.addEventListener('DOMContentLoaded', function() {
       switchTab('learn-more');
     });
 
+    document.getElementById('settings-tab').addEventListener('click', function() {
+      switchTab('settings');
+    });
+
+    // Load saved widget stat preference
+    loadWidgetStatPreference();
+
+    // Add change listeners to radio buttons
+    document.querySelectorAll('input[name="widget-stat"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        saveWidgetStatPreference(this.value);
+      });
+    });
+
     updateTodayStats([]);
     updateLifetimeStats([]);
     loadLogs();
@@ -180,5 +194,48 @@ function formatNumber(num, isEnergy = false) {
   }
   
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function loadWidgetStatPreference() {
+  const storage = getChromeStorage();
+  if (!storage) {
+    console.warn('Chrome storage API not available');
+    return;
+  }
+
+  storage.get(['widgetStatPreference'], function(result) {
+    const preference = result.widgetStatPreference || 'electricity';
+    const radio = document.querySelector(`input[name="widget-stat"][value="${preference}"]`);
+    if (radio) {
+      radio.checked = true;
+    }
+    console.log('Loaded widget stat preference:', preference);
+  });
+}
+
+function saveWidgetStatPreference(value) {
+  const storage = getChromeStorage();
+  if (!storage) {
+    console.warn('Chrome storage API not available');
+    return;
+  }
+
+  storage.set({ widgetStatPreference: value }, function() {
+    console.log('Saved widget stat preference:', value);
+    
+    // Notify all ChatGPT tabs to update their widget
+    if (typeof chrome !== 'undefined' && chrome.tabs) {
+      chrome.tabs.query({ url: ['https://chatgpt.com/*', 'https://chat.openai.com/*'] }, function(tabs) {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, { 
+            action: 'updateWidgetStat', 
+            stat: value 
+          }).catch(() => {
+            // Tab might not have content script loaded
+          });
+        });
+      });
+    }
+  });
 }
 

@@ -276,6 +276,98 @@
       gap: 4px;
     }
 
+    /* Settings Styles */
+    .settings-description {
+      font-size: 13px;
+      color: var(--muted-text);
+      margin: 0 0 14px 0;
+    }
+
+    .settings-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      background-color: var(--equiv-item-background);
+    }
+
+    .radio-option:hover {
+      background-color: rgba(62, 123, 103, 0.08);
+    }
+
+    .radio-option:has(input:checked) {
+      border-color: var(--primary-color);
+      background-color: rgba(62, 123, 103, 0.1);
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-custom {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      margin-right: 12px;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option:has(input:checked) .radio-custom {
+      border-color: var(--primary-color);
+    }
+
+    .radio-custom::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      transition: transform 0.2s ease;
+    }
+
+    .radio-option:has(input:checked) .radio-custom::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radio-icon {
+      font-size: 16px;
+    }
+
+    .radio-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .settings-note {
+      font-size: 11px;
+      color: var(--muted-text);
+      margin: 14px 0 0 0;
+      font-style: italic;
+    }
+
   </style>
   <script src="energy-calculator.js"></script>
   <script src="popup.js"></script>
@@ -292,6 +384,7 @@
     <div class="tabs-group">
       <div class="tab active" id="today-tab">Today</div>
       <div class="tab" id="lifetime-tab">Lifetime</div>
+      <div class="tab" id="settings-tab">Settings</div>
     </div>
     <a href="#" class="methodology-link" style="display: none;">methodology</a>
   </div>
@@ -347,6 +440,65 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Settings Container -->
+  <div id="settings-stats" class="stats-container">
+    <div class="content-section">
+      <div class="section-header">Widget Display</div>
+      <p class="settings-description">Choose which statistic to show on the ChatGPT widget:</p>
+      <div class="settings-options">
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="electricity" checked>
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">⚡️</span>
+            <span class="radio-text">Electricity (Wh)</span>
+          </span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="co2">
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">🌍</span>
+            <span class="radio-text">CO₂ Emissions (g)</span>
+          </span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="miles">
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">🚗</span>
+            <span class="radio-text">Miles Driven</span>
+          </span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="trees">
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">🌳</span>
+            <span class="radio-text">Trees (Annual)</span>
+          </span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="water">
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">💧</span>
+            <span class="radio-text">Water (L)</span>
+          </span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="widget-stat" value="messages">
+          <span class="radio-custom"></span>
+          <span class="radio-label">
+            <span class="radio-icon">💬</span>
+            <span class="radio-text">Messages Sent</span>
+          </span>
+        </label>
+      </div>
+      <p class="settings-note">Changes apply immediately to the ChatGPT page.</p>
     </div>
   </div>
 
